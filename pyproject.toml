@@ -17,9 +17,6 @@ pre-commit = "*"
 ruff = "*"
 vulture = "*"
 
-[tool.poetry.scripts]
-rest-docstring-checker = "rest_docstring_checker.main:main"
-
 [tool.mypy]
 python_version = "3.12"
 cache_dir = ".cache/mypy/"

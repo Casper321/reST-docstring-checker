@@ -1,0 +1,6 @@
+- id: rest-docstring-checker
+  name: rest-docstring-checker
+  language: python
+  entry: rest_docstring_checker
+  description: Check reST Docstrings
+  types: [python]
