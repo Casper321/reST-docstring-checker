@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "rest-docstring-checker"
+version = "0.0.1"
+description = "This repository contains a Python utility tool for checking adherence to PEP 287 – reStructuredText (reST) Docstring Format. It validates docstrings in Python files against the reST format. It's a handy tool for developers seeking to maintain docstring readability and consistency with function headers.."
+authors = [ "Casper Lindberg <casper.lindberg@outlook.com>" ]
+license = "MIT license"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.12"
+docstring-parser = "~0.15.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+mypy = "*"
+pre-commit = "*"
+ruff = "*"
+vulture = "*"
+
+[tool.poetry.scripts]
+rest-docstring-checker = "rest_docstring_checker.cli:main_cli"
+
+[tool.mypy]
+python_version = "3.12"
+cache_dir = ".cache/mypy/"
+check_untyped_defs = true
+no_implicit_optional = true
+
+[tool.ruff]
+select = [
+    "A",      # flake8-builtins
+    "ANN001", # flake8-annotations:missing-type-function-argument
+    "ANN201", # flake8-annotations:missing-return-type-undocumented-public-function
+    "ANN204", # flake8-annotations:missing-return-type-special-method
+    "ANN205", # flake8-annotations:missing-return-type-static-method
+    "ANN206", # flake8-annotations:missing-return-type-class-method
+    "B",      # flake8-bugbear
+    "BLE",    # flake8-blind-except
+    "C",      # flake8-comprehensions
+    "COM",    # flake8-commas
+    "C90",    # mccabe
+    "E",      # pycodestyle errors
+    "F",      # pyflakes
+    "G",      # flake8-logging-format
+    "I",      # isort
+    "N",      # pep8-naming
+    "PL",     # pylint
+    "PD",     # pandas-vet
+    "RUF",    # ruff-specific rules
+    "S",      # flake8-bandit
+    "T10",    # flake8-debugger
+    "T20",    # flake8-print
+    "UP",     # pyupgrade
+    "W",      # pycodestyle warnings
+]
+ignore = [
+    "G001", # logging-string-format
+    "G003", # logging-string-concat
+    "G004", # logging-f-string
+]
+
+[build-system]
+requires = [ "poetry-core" ]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.per-file-ignores]
+# Do not complain if __init__.py files have unused imports.
+"__init__.py" = [ "F401" ]
+"tests/**/*.py" = [
+    "ANN001",
+    "ANN201",
+    "S101",
+]
