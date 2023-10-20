@@ -7,7 +7,7 @@ license = "MIT license"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.10,<3.13"
 docstring-parser = "~0.15.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -16,6 +16,9 @@ mypy = "*"
 pre-commit = "*"
 ruff = "*"
 vulture = "*"
+
+[tool.poetry.scripts]
+rest-docstring-checker = "rest_docstring_checker.__main__:main"
 
 [tool.mypy]
 python_version = "3.12"
