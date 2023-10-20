@@ -1,0 +1,85 @@
+repos:
+  - repo: local
+    hooks:
+      - id: rest_docstring_checker
+        name: Check Docstrings
+        entry: python rest_docstring_checker/main.py
+        language: python
+        types: [ python ]
+        additional_dependencies: ["docstring-parser==0.15"]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: pretty-format-json
+        args: [--autofix]
+      - id: requirements-txt-fixer
+      - id: sort-simple-yaml
+      - id: name-tests-test
+      - id: mixed-line-ending
+      - id: end-of-file-fixer
+      - id: detect-private-key
+      - id: debug-statements
+      - id: check-yaml
+      - id: check-symlinks
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-executables-have-shebangs
+      - id: check-docstring-first
+      - id: check-case-conflict
+      - id: check-byte-order-marker
+      - id: check-builtin-literals
+      - id: check-ast
+      - id: check-added-large-files
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.35.0
+    hooks:
+      - id: markdownlint
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.48.0
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - eslint@8.47.0
+          - eslint-plugin-toml@0.5.0
+        files: \.toml$ # Only lint toml files
+        types: [file]
+        args: ["--fix"]
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+        files: pyproject.toml
+  - repo: https://github.com/ambv/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        language_version: python3
+        additional_dependencies: ["click==8.0.4"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.286
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+  - repo: https://github.com/jendrikseipp/vulture
+    rev: "v2.9.1"
+    hooks:
+      - id: vulture
+        args: [ "rest_docstring_checker", "--min-confidence=100" ]
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+      - id: shellcheck
+        additional_dependencies: []
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+        args: [--python-version=3.12]
+        additional_dependencies: ["docstring-parser==0.15"]
+  - repo: https://github.com/lk16/detect-missing-init
+    rev: v0.1.6
+    hooks:
+      - id: detect-missing-init
+        args: ["--python-folders", "rest_docstring_checker"]
