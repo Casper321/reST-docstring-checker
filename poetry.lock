@@ -402,5 +402,5 @@ toml = "*"
 
 [metadata]
 lock-version = "2.0"
-python-versions = "~3.12"
-content-hash = "5fb12611bc72d61ca49ba1af3483174b803339d392ed556b569be63c5dc20f48"
+python-versions = "^3.11"
+content-hash = "ce390c8c34366d4d4e77638f2903c5c4a91e19cc4c27d6b088d24bc6f50b0201"
