@@ -19,8 +19,8 @@ install_dev: install_poetry
 	# Installing pre-commit dependencies...
 	pre-commit install
 
-run_pre_commit:
+run_pre_commit: install_dev
 	poetry run pre-commit run --all-files
 
-run_tests:
+run_tests: install_dev
 	poetry run python -m pytest

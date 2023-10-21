@@ -38,15 +38,12 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies
+      - name: Install project and dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --with dev
-
-      - name: Install project
-        run: poetry install --no-interaction
+        run: make install_dev
 
       - name: Run pre-commit
-        run: pre-commit install && poetry run pre-commit run --all-files
+        run: make run_pre_commit
 
       - name: Run tests
         run: poetry run python -m pytest --cov
