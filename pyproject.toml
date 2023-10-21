@@ -71,6 +71,15 @@ select = [
 
 [tool.pytest.ini_options]
 testpaths = "tests"
+addopts = [
+    "--cov-report=html:test-reports/htmlcov",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=xml:test-reports/coverage.xml",
+    "--cov=rest_docstring_checker",
+    "--no-cov-on-fail",
+    "--strict-markers",
+    "--verbose",
+]
 
 [build-system]
 requires = [ "poetry-core" ]
