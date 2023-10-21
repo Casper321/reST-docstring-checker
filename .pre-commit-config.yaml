@@ -1,13 +1,4 @@
 repos:
-  - repo: local
-    hooks:
-      - id: rest-docstring-checker
-        name: reST docstring checker
-        language: python
-        entry: rest-docstring-checker
-        description: Check reST Docstrings
-        types: [python]
-        additional_dependencies: ["docstring-parser==0.15"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
