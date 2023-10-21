@@ -11,7 +11,7 @@ It's a handy tool for developers seeking to maintain docstring
 ```yaml
 repos:
   - repo: https://github.com/Casper321/reST-docstring-checker
-    rev: ...
+    rev: v0.0.1
     hooks:
       - id: rest-docstring-checker
         additional_dependencies: [ "docstring-parser==0.15" ]
