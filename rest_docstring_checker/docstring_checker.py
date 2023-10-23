@@ -131,6 +131,9 @@ def _check_docstring_function_params_mismatch(
 ) -> list[tuple[str, int]]:
     """Check if docstring function params mismatch.
 
+    Clean docstring params from variable length arguments such
+    as **kwargs and *args first.
+
     :param node: AST node of the function.
     :param docstring_errors: List of errors found in docstrings
     structured as (docstring error, line number).
@@ -139,7 +142,12 @@ def _check_docstring_function_params_mismatch(
     :return: Updated list of errors found in docstrings structured
     as (docstring error, line number).
     """
-    is_param_mismatch = function_params != docstring_params
+    clean_docstring_params = {
+        docstring_param
+        for docstring_param in docstring_params
+        if not docstring_param.startswith("*")
+    }
+    is_param_mismatch = function_params != clean_docstring_params
     if docstring_params and is_param_mismatch:
         docstring_errors.append(
             (

@@ -98,7 +98,6 @@ def test_fn(x: int, y: int) -> int:
     )
 
 
-# Test with wrong return type in docstring
 def test_check_docstrings_returns_mismatch(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -121,3 +120,48 @@ def test_fn(x: int, y: int) -> int:
         get_docstring_error_message(DocstringError.NO_RETURN, TEST_FUNCTION_NAME)
         == errors[0][0]
     )
+
+
+def test_check_docstrings_variable_length_argument(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+def test_fn(x: int, y: int, *args, **kwargs) -> int:
+    """Test function.
+
+    :param x: First integer.
+    :param y: Second integer.
+    :param *args: Variable length argument.
+    :param **kwargs: Variable length argument.
+    :return: Sum of integers.
+    """
+    return x + y
+        ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) == 0
+
+
+def test_check_docstrings_variable_length_argument_invalid(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+def test_fn(x: int, y: int, **kwargs) -> int:
+    """Test function.
+
+    :param x: First integer.
+    :param y: Second integer.
+    :param kwargs: Variable length argument.
+    :return: Sum of integers.
+    """
+    return x + y
+        ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) == 0
