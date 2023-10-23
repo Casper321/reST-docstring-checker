@@ -164,4 +164,8 @@ def test_fn(x: int, y: int, **kwargs) -> int:
         ''',
         )
     errors = check_docstrings(str(test_file_path))
-    assert len(errors) == 0
+    assert len(errors) > 0
+    assert (
+        get_docstring_error_message(DocstringError.PARAMS_MISMATCH, TEST_FUNCTION_NAME)
+        == errors[0][0]
+    )
