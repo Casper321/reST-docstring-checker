@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rest-docstring-checker"
-version = "0.0.1"
+version = "0.0.3"
 description = "This repository contains a Python utility tool for checking adherence to PEP 287 - reStructuredText (reST) Docstring Format. It validates function docstrings in Python files against the reST format."
 authors = [ "Casper Lindberg <casper.lindberg@outlook.com>" ]
 license = "MIT license"
