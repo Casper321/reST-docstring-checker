@@ -169,3 +169,44 @@ def test_fn(x: int, y: int, **kwargs) -> int:
         get_docstring_error_message(DocstringError.PARAMS_MISMATCH, TEST_FUNCTION_NAME)
         == errors[0][0]
     )
+
+
+def test_check_docstrings_async_valid(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+async def test_fn(x: int, y: int) -> int:
+    """Test function.
+
+    :param x: First integer.
+    :param y: Second integer.
+    :return: Sum of integers.
+    """
+    return x + y
+        ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) == 0
+
+
+def test_check_docstrings_async_invalid(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+async def test_fn(x: int, y: int) -> int:
+    """Test function.
+
+    :param x: First integer.
+    :return: Sum of integers.
+    """
+    return x + y
+        ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) > 0

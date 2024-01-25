@@ -34,7 +34,7 @@ def check_docstrings(
 
     docstring_errors = []
     for node in module.body:
-        if not isinstance(node, ast.FunctionDef):
+        if not (isinstance(node, (ast.AsyncFunctionDef, ast.FunctionDef))):
             continue
         if _ignore_this_function(node, file_comments):
             continue
@@ -96,7 +96,7 @@ def check_docstrings(
 
 
 def _check_docstring_params_missing(
-    node: ast.FunctionDef,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
     docstring_errors: list[tuple[str, int]],
     disallow_no_params: bool,
     is_at_least_one_undocumented_param: bool,
@@ -124,7 +124,7 @@ def _check_docstring_params_missing(
 
 
 def _check_docstring_function_params_mismatch(
-    node: ast.FunctionDef,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
     docstring_errors: list[tuple[str, int]],
     docstring_params: set[str],
     function_params: set[str],
@@ -159,7 +159,7 @@ def _check_docstring_function_params_mismatch(
 
 
 def _check_missing_docstring_return(
-    node: ast.FunctionDef,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
     docstring_errors: list[tuple[str, int]],
     disallow_no_return: bool,
     docstring: Docstring,
@@ -192,7 +192,7 @@ def _check_missing_docstring_return(
     return docstring_errors
 
 
-def _is_function_return_type_none(node: ast.FunctionDef) -> bool:
+def _is_function_return_type_none(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
     """Check if function return type is None.
 
     :param node: AST node of the function.
@@ -204,7 +204,7 @@ def _is_function_return_type_none(node: ast.FunctionDef) -> bool:
 
 
 def _ignore_this_function(
-    node: ast.FunctionDef,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
     file_comments: list[tokenize.TokenInfo],
 ) -> bool:
     """Check if this function should be ignored.
