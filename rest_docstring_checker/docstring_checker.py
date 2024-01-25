@@ -69,15 +69,17 @@ def check_docstrings(
             continue
 
         function_params = {param.arg for param in node.args.args}
+        if node.args.vararg:
+            function_params.add(node.args.vararg.arg)
+        if node.args.kwarg:
+            function_params.add(node.args.kwarg.arg)
         docstring_params = {param.arg_name for param in docstring.params}
-        is_at_least_one_undocumented_param = (
-            len(function_params) > 0 and len(docstring_params) == 0
-        )
         docstring_errors = _check_docstring_params_missing(
             node,
             docstring_errors,
             disallow_no_params,
-            is_at_least_one_undocumented_param,
+            docstring_params,
+            function_params,
         )
         docstring_errors = _check_docstring_function_params_mismatch(
             node,
@@ -99,7 +101,8 @@ def _check_docstring_params_missing(
     node: ast.FunctionDef | ast.AsyncFunctionDef,
     docstring_errors: list[tuple[str, int]],
     disallow_no_params: bool,
-    is_at_least_one_undocumented_param: bool,
+    docstring_params: set[str],
+    function_params: set[str],
 ) -> list[tuple[str, int]]:
     """Check if docstring params are missing.
 
@@ -108,18 +111,25 @@ def _check_docstring_params_missing(
     as (docstring error, line number).
     :param disallow_no_params: If True, forces all functions to provide all
     function parameters.
-    :param is_at_least_one_undocumented_param: True if there is at least
-    one undocumented param, False otherwise.
+    :param docstring_params: Set of docstring params.
+    :param function_params: Set of function params.
     :return: Updated list of errors found in docstrings structured as
     (docstring error, line number).
     """
-    if disallow_no_params and is_at_least_one_undocumented_param:
-        docstring_errors.append(
-            (
-                get_docstring_error_message(DocstringError.PARAMS_MISSING, node.name),
-                node.lineno,
-            ),
+    if not disallow_no_params:
+        is_at_least_one_undocumented_param = len(function_params) > len(
+            docstring_params,
         )
+        if is_at_least_one_undocumented_param:
+            docstring_errors.append(
+                (
+                    get_docstring_error_message(
+                        DocstringError.PARAMS_MISSING,
+                        node.name,
+                    ),
+                    node.lineno,
+                ),
+            )
     return docstring_errors
 
 
@@ -143,9 +153,7 @@ def _check_docstring_function_params_mismatch(
     as (docstring error, line number).
     """
     clean_docstring_params = {
-        docstring_param
-        for docstring_param in docstring_params
-        if not docstring_param.startswith("*")
+        docstring_param.replace("*", "") for docstring_param in docstring_params
     }
     is_param_mismatch = function_params != clean_docstring_params
     if docstring_params and is_param_mismatch:
