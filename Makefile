@@ -9,7 +9,7 @@ install_poetry:
 	pip install --upgrade pip
 	# Installing poetry if not installed...
 	@python -m poetry --version || \
-		pip install poetry==1.6.1
+		pip install poetry==1.8.2
 
 install: install_poetry
 	poetry install

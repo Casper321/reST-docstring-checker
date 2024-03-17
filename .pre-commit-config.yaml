@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
       - id: pretty-format-json
@@ -23,39 +23,44 @@ repos:
       - id: check-builtin-literals
       - id: check-ast
       - id: check-added-large-files
+  - repo: https://github.com/lk16/detect-missing-init
+    rev: v0.1.6
+    hooks:
+      - id: detect-missing-init
+        args: [ "--python-folders", "rest_docstring_checker" ]
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.35.0
+    rev: v0.39.0
     hooks:
       - id: markdownlint
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.48.0
+    rev: v8.56.0
     hooks:
       - id: eslint
         additional_dependencies:
-          - eslint@8.47.0
-          - eslint-plugin-toml@0.5.0
+          - eslint@8.57.0
+          - eslint-plugin-toml@0.9.2
         files: \.toml$ # Only lint toml files
         types: [file]
         args: ["--fix"]
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.2
+    rev: v1.3.3
     hooks:
       - id: python-safety-dependencies-check
         files: pyproject.toml
   - repo: https://github.com/ambv/black
-    rev: 23.7.0
+    rev: 24.3.0
     hooks:
       - id: black
         language_version: python3
         additional_dependencies: ["click==8.0.4"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.286
+    rev: v0.3.2
     hooks:
       - id: ruff
         args:
           - --fix
   - repo: https://github.com/jendrikseipp/vulture
-    rev: "v2.9.1"
+    rev: "v2.11"
     hooks:
       - id: vulture
         args: [ "rest_docstring_checker", "--min-confidence=100" ]
@@ -64,13 +69,11 @@ repos:
     hooks:
       - id: shellcheck
         additional_dependencies: []
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
+  - repo: local
     hooks:
-      - id: mypy
-        args: [--python-version=3.12]
-  - repo: https://github.com/lk16/detect-missing-init
-    rev: v0.1.6
-    hooks:
-      - id: detect-missing-init
-        args: ["--python-folders", "rest_docstring_checker"]
+        - id: mypy
+          name: mypy
+          entry: bash -c "mypy --python-version=3.12 -p rest_docstring_checker -p tests"
+          language: system
+          types: [ python ]
+          require_serial: true
