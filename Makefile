@@ -1,4 +1,6 @@
 .PHONY:
+	build_test
+	build_base_bare
 	install_poetry
 	install
 	install_dev
@@ -19,8 +21,35 @@ install_dev: install_poetry
 	# Installing pre-commit dependencies...
 	pre-commit install
 
-run_pre_commit: install_dev
-	poetry run pre-commit run --all-files
+build_base_bare:
+	docker build \
+		--file Dockerfile \
+		--target base_bare \
+		--tag docstring-checker-bare \
+		--cache-from=docstring-checker-bare \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		${PWD}
 
-run_tests: install_dev
-	poetry run python -m pytest
+
+build_test:
+	docker build \
+		--file Dockerfile \
+		--target test \
+		--tag docstring-checker-test  \
+		--cache-from=docstring-checker-bare \
+		--cache-from=docstring-checker-test \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		${PWD}
+
+run_pre_commit: build_test
+	docker run --rm \
+		--volume ${PWD}:/app \
+		docstring-checker-test \
+		-c "pre-commit run --all-files"
+
+
+run_tests: build_test
+	docker run --rm \
+		--volume ${PWD}:/app \
+		docstring-checker-test \
+		-c "python -m pytest"
