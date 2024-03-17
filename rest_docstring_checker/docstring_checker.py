@@ -38,7 +38,6 @@ def check_docstrings(
             continue
         if _ignore_this_function(node, file_comments):
             continue
-
         docstring_node = ast.get_docstring(node)
 
         if not docstring_node:
@@ -73,6 +72,9 @@ def check_docstrings(
             function_params.add(node.args.vararg.arg)
         if node.args.kwarg:
             function_params.add(node.args.kwarg.arg)
+        if node.args.kwonlyargs:
+            function_params.update({param.arg for param in node.args.kwonlyargs})
+
         docstring_params = {param.arg_name for param in docstring.params}
         docstring_errors = _check_docstring_params_missing(
             node,

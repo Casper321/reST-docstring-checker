@@ -11,10 +11,10 @@ It's a handy tool for developers seeking to maintain docstring
 ```yaml
 repos:
   - repo: https://github.com/Casper321/reST-docstring-checker
-    rev: v0.0.3
+    rev: v0.0.4
     hooks:
       - id: rest-docstring-checker
-        additional_dependencies: [ "docstring-parser==0.15" ]
+        additional_dependencies: [ "docstring-parser==0.16" ]
 ```
 
 ## Setup

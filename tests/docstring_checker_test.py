@@ -220,6 +220,45 @@ def test_fn(x: int, y: int, **kwargs) -> int:
     assert len(errors) == 0
 
 
+def test_check_docstrings_keyword_only_arguments(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+def test_fn(arg: str, *args, exact_kwarg: bool) -> None:
+    """Test function to test docstring checker.
+
+    :param arg: An argument.
+    :param *args: Positional arguments.
+    :param exact_kwarg: Specified keyword argument.
+    """
+            ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) == 0
+
+
+def test_check_docstrings_keyword_only_arguments_single_asterisk(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    test_file_path = tmp_path_factory.mktemp(TEST_FILE_DIR) / TEST_FILE_NAME
+    with open(test_file_path, "w") as test_file:
+        test_file.write(
+            '''
+def test_fn(arg: str, *, exact_kwarg: bool) -> None:
+    """Test function to test docstring checker.
+
+    :param arg: An argument.
+    :param exact_kwarg: Specified keyword argument.
+    """
+            ''',
+        )
+    errors = check_docstrings(str(test_file_path))
+    assert len(errors) == 0
+
+
 def test_check_docstrings_variable_length_argument_missing_kwargs(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
